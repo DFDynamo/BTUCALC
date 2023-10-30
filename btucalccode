@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Calculadora de BTU</title>
+  <style>
+    /* Estilos del formulario */
+    body {
+      background-color: #22B6F4;
+      color: white;
+      font-family: Kanit, sans-serif;
+    }
+
+    .container {
+      max-width: 400px;
+      margin: 0 auto;
+      padding: 20px;
+      border-radius: 10px;
+      background-color: transparent;
+      text-align: center;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+      text-align: left;
+    }
+
+    label {
+      font-weight: bold;
+      font-size: 22px;
+      font-family: K2D, sans-serif;
+      margin-bottom: 1.7px;
+      text-transform: uppercase; /* Convertir todos los títulos a mayúsculas */
+    }
+
+    input[type="number"],
+    input[type="text"] {
+      margin-bottom: 15px;
+      padding-right: 10px;
+      padding: 11px;
+      border-radius: 100px;
+      border: none;
+    }
+
+    input[type="number"]:focus,
+    input[type="text"]:focus {
+      outline: none;
+    }
+
+    .calculate-btn {
+      font-family: Kanit, sans-serif;
+      font-size: 25px;
+      font-weight: bold;
+      color: white;
+      background-color: #25977b;
+      border: none;
+      border-radius: 30px;
+      width: 252px;
+      margin-top: 34px;
+      border-right-width: 25px;
+      padding-right: 30px;
+      padding-left: 30px;
+      padding-bottom: 11px;
+      padding-top: 10px;
+    }
+
+    .result {
+      margin-top: 20px;
+      font-size: 25px;
+    }
+
+    .error-message {
+      color: red;
+      font-family: Kanit, sans-serif;
+      font-size: 15px;
+    }
+
+    /* Estilos de la segunda página */
+    .results-page {
+      display: none;
+      text-align: center;
+      margin-top: 50px;
+    }
+
+    .results-container {
+      max-width: 400px;
+      margin: 0 auto;
+      padding: 20px;
+      border-radius: 10px;
+      background-color: #25977b;
+      text-align: left;
+    }
+
+    .results-title {
+      font-size: 25px;
+      font-family: K2D, sans-serif;
+      color: white;
+      margin-bottom: 10px;
+      text-transform: uppercase; /* Convertir todos los títulos a mayúsculas */
+    }
+
+    .results-value {
+      font-size: 20px;
+      font-family: K2D, sans-serif;
+      color: white;
+      margin-bottom: 20px;
+    }
+
+    .restart-btn {
+      font-family: Kanit, sans-serif;
+      font-size: 25px;
+      font-weight: bold;
+      color: white;
+      background-color: #2e8b57; /* Color diferente para el botón Reiniciar */
+      border: none;
+      border-radius: 30px;
+      width: 200px;
+      margin-top: 20px;
+      padding: 10px 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <form id="btu-form" onsubmit="calculateBTU(event)">
+      <div class="form-group">
+        <label for="numPersons" style="font-size: 22px; font-family: K2D, sans-serif;">Cantidad de personas en el recinto</label>
+        <input type="number" id="numPersons" placeholder="Ej: Promedio de personas en horas de apertura" required>
+      </div>
+      <div class="form-group">
+        <label for="area" style="font-size: 22px; font-family: K2D, sans-serif;">Dimensiones del recinto</label>
+        <input type="number" id="area" placeholder="Ej: Área en m²" required>
+      </div>
+      <div class="form-group">
+        <label for="numWindows" style="font-size: 22px; font-family: K2D, sans-serif;">Número de ventanas y sus dimensiones</label><br>
+        <input type="number" id="numWindows" placeholder="Ej: Cuántas ventanas hay" required>
+        <input type="number" id="windowSize" placeholder="Ej: Medida de las ventanas en m²" required>
+      </div>
+      <div class="form-group">
+        <label style="font-size: 22px; font-family: K2D, sans-serif;">Clima</label><br>
+        <input type="radio" id="clima-caliente" name="clima" value="caliente" required>
+        <label for="clima-caliente" style="font-size: 15px; font-family: Kanit, sans-serif;">Caliente</label>
+        <input type="radio" id="clima-frio" name="clima" value="frio" required>
+        <label for="clima-frio" style="font-size: 15px; font-family: Kanit, sans-serif;">Frío</label>
+        <input type="radio" id="clima-templado" name="clima" value="templado" required>
+        <label for="clima-templado" style="font-size: 15px; font-family: Kanit, sans-serif;">Templado</label>
+      </div>
+      <button type="submit" class="calculate-btn">Calcular BTU</button>
+      <p id="error-message" class="error-message"></p>
+    </form>
+  </div>
+
+  <div class="results-page" id="resultsPage">
+    <div class="results-container">
+      <div class="form-group">
+        <label class="results-title" for="numPersons">Cantidad de personas en el recinto:</label>
+        <p class="results-value" id="resultPersons"></p>
+      </div>
+      <div class="form-group">
+        <label class="results-title" for="area">Dimensiones del recinto:</label>
+        <p class="results-value" id="resultArea"></p>
+      </div>
+      <div class="form-group">
+        <label class="results-title" for="numWindows">Número de ventanas y sus dimensiones:</label>
+        <p class="results-value" id="resultWindows"></p>
+      </div>
+      <div class="form-group">
+        <label class="results-title">Clima:</label>
+        <p class="results-value" id="resultClima"></p>
+      </div>
+      <p class="result" id="resultBTU"></p>
+      <button type="button" class="restart-btn" onclick="restartForm()">Reiniciar</button>
+    </div>
+  </div>
+
+  <script>
+    function calculateBTU(event) {
+      event.preventDefault();
+
+      var numPersons = parseInt(document.getElementById("numPersons").value);
+      var area = parseInt(document.getElementById("area").value);
+      var numWindows = parseInt(document.getElementById("numWindows").value);
+      var windowSize = parseInt(document.getElementById("windowSize").value);
+      var clima = document.querySelector('input[name="clima"]:checked');
+
+      if (isNaN(numPersons) || isNaN(area) || isNaN(numWindows) || isNaN(windowSize) || !clima) {
+        document.getElementById("error-message").textContent = "ERROR, VALORES INCORRECTOS!";
+        resetForm();
+        return;
+      }
+
+      if (numPersons < 0 || area < 0 || numWindows < 0 || windowSize < 0) {
+        document.getElementById("error-message").textContent = "ERROR, NO SE PERMITEN NÚMEROS NEGATIVOS";
+        resetForm();
+        return;
+      }
+
+      var btu = numPersons * 600;
+
+      if (area < 9) {
+        btu += area * 800;
+      } else {
+        btu += (9 * 800) + ((area - 9) * 800);
+      }
+
+      if (clima.value === "frio") {
+        btu -= 2000;
+      } else if (clima.value === "templado") {
+        btu -= 1000;
+      }
+
+      if (clima.value === "caliente") {
+        btu += numWindows * windowSize * 724;
+      }
+
+      document.getElementById("resultPersons").textContent = numPersons + " Personas (" + (numPersons * 600) + " BTU)";
+      document.getElementById("resultArea").textContent = area + " m² (" + (area * 800) + " BTU)";
+      document.getElementById("resultWindows").textContent = numWindows + " Ventanas (" + (numWindows * windowSize * 724) + " BTU)";
+      document.getElementById("resultClima").textContent = clima.value;
+
+      document.getElementById("resultBTU").textContent = "El resultado es: " + btu + " BTU";
+
+      document.getElementById("btu-form").style.display = "none";
+      document.getElementById("resultsPage").style.display = "block";
+      document.getElementById("error-message").textContent = "";
+    }
+
+    function resetForm() {
+      document.getElementById("btu-form").reset();
+    }
+
+    function restartForm() {
+      document.getElementById("resultsPage").style.display = "none";
+      document.getElementById("btu-form").style.display = "block";
+      resetForm();
+    }
+  </script>
+</body>
+</html>
